@@ -1,28 +1,15 @@
-import ext from "./utils/ext";
+import ext from "./utils/ext"
+import {deals} from "../data/deals.json"
 
 var extractTags = () => {
-  var url = document.location.href;
-  if(!url || !url.match(/^http/)) return;
+  var url = document.location.hostname.replace('www.', '')
 
-  var data = {
-    title: "",
-    description: "",
-    url: document.location.href
+  let matchedDeal = deals.filter((deal) => url.indexOf(deal.domain) > -1)
+
+  if (matchedDeal.length > 0) {
+    return matchedDeal[0]
   }
-
-  var ogTitle = document.querySelector("meta[property='og:title']");
-  if(ogTitle) {
-    data.title = ogTitle.getAttribute("content")
-  } else {
-    data.title = document.title
-  }
-
-  var descriptionTag = document.querySelector("meta[property='og:description']") || document.querySelector("meta[name='description']")
-  if(descriptionTag) {
-    data.description = descriptionTag.getAttribute("content")
-  }
-
-  return data;
+  return
 }
 
 function onRequest(request, sender, sendResponse) {
@@ -32,3 +19,4 @@ function onRequest(request, sender, sendResponse) {
 }
 
 ext.runtime.onMessage.addListener(onRequest);
+

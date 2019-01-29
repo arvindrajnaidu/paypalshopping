@@ -13,12 +13,9 @@ var template = (data) => {
   var json = JSON.stringify(data);
   return (`
   <div class="site-description">
+    <img src='${data.logoUrl}'/>
     <h3 class="title">${data.title}</h3>
-    <p class="description">${data.description}</p>
-    <a href="${data.url}" target="_blank" class="url">${data.url}</a>
-  </div>
-  <div class="action-container">
-    <button data-bookmark='${json}' id="save-btn" class="btn btn-primary">Save</button>
+    <p class="description">Checkout with PayPal.</p>
   </div>
   `);
 }
@@ -33,7 +30,7 @@ var renderBookmark = (data) => {
     var tmpl = template(data);
     displayContainer.innerHTML = tmpl;  
   } else {
-    renderMessage("Sorry, could not extract this page's title and URL")
+    renderMessage("Sorry, could not find any deals.")
   }
 }
 
