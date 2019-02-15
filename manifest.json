@@ -29,10 +29,14 @@
         "https://*/*"
       ],
       "js": [
+        "scripts/alerty.js",
         "scripts/contentscript.js"
       ],
+      "css": [
+        "styles/alerty.css"
+      ],
       "run_at": "document_end",
-      "all_frames": false
+      "all_frames": true
     }
   ],
   "browser_action": {
@@ -41,8 +45,11 @@
       "16": "icons/icon-16.png"
     },
     "default_title": "PayPal Shopping",
-    "default_popup": "popup.html"
-  }
+    "default_popup": "xo.html"
+  },
+  "permissions": [
+      "activeTab"
+  ]
 }
 
 

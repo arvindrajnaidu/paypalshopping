@@ -129,8 +129,11 @@ function buildJS(target) {
   const files = [
     'background.js',
     'contentscript.js',
+    'alerty.js',
     'options.js',
-    'popup.js',
+    'panel.js',
+    'devtools.js',
+    'xo.js',
     'livereload.js'
   ]
 
