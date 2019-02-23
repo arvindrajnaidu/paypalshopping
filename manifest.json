@@ -33,7 +33,8 @@
         "scripts/contentscript.js"
       ],
       "css": [
-        "styles/alerty.css"
+        "styles/alerty.css",
+        "styles/animate.min.css"
       ],
       "run_at": "document_end",
       "all_frames": true

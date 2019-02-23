@@ -119,7 +119,7 @@
     }
   }
   &.toasts {
-    height: 48px;
+    height: 88px;
     top: auto;
     bottom: 0;
     background-color: #323232;
@@ -128,8 +128,8 @@
     -webkit-box-shadow: none;
     box-shadow: none;
     .alerty-content {
-      height: 48px;
-      line-height: 48px;
+      height: 88px;
+      line-height: 88px;
       padding: 0 24px;
       font-size: 14px;
       .alerty-message {
