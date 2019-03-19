@@ -1,0 +1,147 @@
+
+# PayPal Shopping
+
+The PayPal Shopping portfolio will equip merchants with tools to identify and re-engage potential customers through the scale and recognition of the PayPal Network. The scaled reengagement will lower acquisition costs and increase conversion rates.
+
+To get started with our PayPal shopping product suite, you must first set up your website to start sending us the customer's shopping events. 
+
+## Implementation
+
+### Include
+
+Before using the Web SDK make sure you have required it by adding this tag on every page that you intend to use it. You do this by adding this code snippet in your <HEAD> element.
+
+```
+<head>  
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<script src="https://www.paypal.com/sdk/js?client-id=CLIENT_ID&analytics=custom"></script>  
+</head>
+```
+> **For Third Party Integrations** Send in the PayPal Merchant Id if available on the **src** attribute of the **script-tag** above. Like so   ```<script src="https://www.paypal.com/sdk/js?client-id=CLIENT_ID&merchant-id=<merchant Id>&analytics=custom"></script>```
+
+### Initialize
+
+Add this code to initialize the SDK. If you have [PayPal Express Checkout](https://developer.paypal.com/docs/checkout/integrate/#1-get-paypal-rest-api-credentials), you probably already have done this. You can obtain your client ids from [https://developer.paypal.com](https://developers.paypal.com)
+
+```
+pp.init({
+	client: {
+		sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+		production: '<insert production client id>'
+	}
+})
+```
+
+# PayPal Tracker
+
+The **PayPal Tracker** is JavaScript code that allows you to track visitor activity on your website. 
+
+### Javascript SDK
+
+The following are Javascript functions in the SDK that allows one to implement the Tracker.
+
+**paypal.Tracker.setUser(params)**
+In case you know who the visitor is, use this event to tell PayPal. All events emitted on that page ( both previously and later) will be attributed to this user. If you don't have the user's email, do not call this function.
+```
+/* 
+* Example of and event emitted when a known user visits your website.
+*/
+paypal.Tracker.setUser({
+	user: {
+		id: <user_id>, // Use email here
+		name: <name of the user>
+	}
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+**paypal.Tracker.view(params)**
+This event is to report the page that is being viewed. Use any custom page names you might have, the function defaults to the page's URL otherwise.
+```
+/* 
+* Example of and event emitted when a visitor lands on a page
+*/
+paypal.Tracker.view({
+	pageUrl: <page_url> // Enter page URL
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+**paypal.Tracker.addToCart(params)**
+This event is to report the items that are being added to cart. It takes a cart-id and an array of item objects. Each item should have an id (SKU if available) which should match the id provided on the product feed (if you have integrated the feed). If the cart-id is not provided, a last known un-purchased cart-id is used. If none exists and random id will be used.
+```
+/* 
+* Example of and event emitted when an item is added to cart
+*/
+paypal.Tracker.addToCart({
+	cartId: <The cart's id in your system>, // optional
+	items: [{
+		id: <SKU of the item added>,
+		name: <item name>, // optional
+		url: <item url>, // optional
+		imgUrl: <item image> // optional
+	}]
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+**paypal.Tracker.setCart(params)**
+This event is to set the entire cart object. It takes a cart-id and an array of item objects. Each item should have an id (SKU if available) which should match the id provided on the product feed. If the cart-id is not provided, a last known un-purchased cart is used. If none exists and random id is used.
+```
+/* 
+* Example of and event emitted when an item is added to cart
+*/
+paypal.Tracker.setCart({
+	cartId: <The cart's id in your system>,
+	items: [{
+		id: <SKU of the item>,
+		name: <item name>, // optional
+		url: <item url>, // optional
+		imgUrl: <item image> // optional
+	}]
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+**paypal.Tracker.removeFromCart(params)**
+This event is to report the items that are being added to cart. It takes a cart-id and an array of item objects. Each item should have an id (SKU if available) which should match the id provided on the product feed. If the cart-id is not provided, a last known un-purchased cart is used. If none exists the call has no effect. 
+```
+/* 
+* Example of and event emitted when an item is removed from a cart
+*/
+paypal.Tracker.removeFromCart({
+	cartId: <The cart's id in your system>, // optional
+	items: [{
+		id: <SKU of the item removed>
+	}]
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+**paypal.Tracker.purchase(params)**
+This event is to report that a particular cart has been purchased. If the cart id is not provided, a last known un-purchased cart id is used.
+```
+/* 
+* Example of and event emitted when an a cart is purchased
+*/
+paypal.Tracker.purchase({
+	cartId: <The cart's id in your system> // optional
+}).then((response)=> {
+	// handle successful responses
+}).catch((err)=>{
+	// handle error
+})
+```
+
+

@@ -3,14 +3,23 @@ import ext from "./utils/ext"
 var port = ext.runtime.connect();
 
 let ecToken
+let merchantWin
 let clientId
 
 function onRequest(request, sender, sendResponse) {
-	console.log(request, sender, ecToken, '<<<<<<<<<<<<<<<<<<<')
-	sendResponse({ecToken})
-  	// if (request.action === 'process-page') {
-   //  	sendResponse(extractTags())
-  	// }
+	if (window.location === window.parent.location) {
+		console.log(request, sender, ecToken, '<<<<<<<<<<<<<<<<<<<')
+		if (request.action === 'getECToken') {
+			sendResponse({ecToken})
+			return false
+		}	else if (request.extAction === 'approve') {
+			delete request.extAction
+			console.log(request, 'All the cool data')
+			merchantWin.postMessage({ type: "PP_APPROVAL", data: request }, "*")
+			return false
+		}	
+	}
+	return true
 }
 
 const showXO = (data, sendApproval) => {
@@ -82,28 +91,44 @@ if (window.location.hostname.indexOf('.paypal.com') > -1) {
 		}
 	})
 
-	getECToken()	
+	getECToken()
 } else if (window.top == window.self) {
 
 	window.addEventListener('message', (e) => {
 		if (e.data && e.data.type === 'ECTOKEN') {
 			ecToken = e.data.ecToken
+			merchantWin = e.source
 
-			console.log('ECTOKEN IS: ', ecToken)			
-
-			fetch(`https://www.paypal.com/shoplist/xo/approve?ecToken=${ecToken}`)
-				.then(function(response) {
-					debugger
-				    return response.json()
-				}).then(function(data) {
+			ext.runtime.sendMessage(
+				{contentScriptQuery: 'approveEC', ecToken},
+				data => {
 					console.log(data, 'Approved')
-					data.intent = 'sale'
+					// data.intent = 'sale'
+					// showXO(data, () => {
+					// 	console.log('Posting Approval')
+					// 	e.source.postMessage({ type: "PP_APPROVAL", data }, "*")
+					// })
+				});
 
-					showXO(data, () => {
-						console.log('Posting Approval')
-						e.source.postMessage({ type: "PP_APPROVAL", data }, "*")
-					})
-				})
+			// fetch(`https://www.paypal.com/shoplist/xo/approve?ecToken=${ecToken}`, {
+			// 	headers: {
+			// 		'Content-Type': 'application/json'
+			// 	}
+			// })
+			// .then(function(response) {
+			// 		debugger
+			// 		return response.json()
+			// })
+			// .then(function(data) {
+			// 	console.log(data, 'Approved')
+			// 	data.intent = 'sale'
+
+			// 	showXO(data, () => {
+			// 		console.log('Posting Approval')
+			// 		e.source.postMessage({ type: "PP_APPROVAL", data }, "*")
+			// 	})
+			// })
+			// .catch(console.log)
 		} else if (e.data && e.data.type === 'CLIENTID') {
 			clientId = e.data.clientId
 			console.log('CLIENTID IS: ', clientId)
@@ -112,3 +137,14 @@ if (window.location.hostname.indexOf('.paypal.com') > -1) {
 }
 
 ext.runtime.onMessage.addListener(onRequest);
+
+// ext.webRequest.onBeforeRequest.addListener(
+//   function(details) { 
+//     console.log('Cancelling')
+//     return { cancel: true }; 
+//   },
+//   {
+//     urls: ["*://www.paypal.com/*"
+//   ]},
+//   ["blocking"]
+// );

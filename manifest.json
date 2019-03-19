@@ -15,6 +15,7 @@
   },
   "permissions": [
     "tabs",
+    "activeTab",
     "storage",
     "http://*/*",
     "https://*/*"
@@ -47,10 +48,7 @@
     },
     "default_title": "PayPal Shopping",
     "default_popup": "xo.html"
-  },
-  "permissions": [
-      "activeTab"
-  ]
+  }
 }
 
 
