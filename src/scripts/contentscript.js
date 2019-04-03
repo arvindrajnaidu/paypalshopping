@@ -42,6 +42,21 @@ const showXO = (data, sendApproval) => {
 	)
 }
 
+const infiltrate = () => {
+	var actualCode = '(' + function() {
+			window._oldxprops = window.xprops;
+			window.xprops.onAuthorize = function () {
+				console.log(arguments, 'Args')
+				window._oldxprops.onAuthorize.apply(this, arguments)
+			}
+	} + ')();';
+
+	var script = document.createElement('script');
+	script.textContent = actualCode;
+	(document.head||document.documentElement).appendChild(script);
+	script.remove();	
+}
+
 const getECToken = () => {
 	var actualCode = '(' + function() {
 	    window.xprops && window.xprops.payment()
@@ -78,9 +93,9 @@ const setApproval = (data) => {
 	script.remove();	
 }
 
-if (window.location.hostname.indexOf('.paypal.com') > -1) {
+if (window.location.hostname.indexOf('www.paypal.com') > -1) {
 	document.addEventListener('EC_TOKEN', (e) => {
-	  var data=e.detail;
+	  var data = e.detail;
 	  console.log("received " + data)
 	  window.top.postMessage({ type: "ECTOKEN", ecToken: data }, "*")
 	})
@@ -91,6 +106,7 @@ if (window.location.hostname.indexOf('.paypal.com') > -1) {
 		}
 	})
 
+	// infiltrate()
 	getECToken()
 } else if (window.top == window.self) {
 
